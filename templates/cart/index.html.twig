@@ -49,6 +49,11 @@
 				</tr>
 				{% set total = total + item.subtotal %}
 			{% endfor %}
+			<tr>
+				<td colspan="5">
+					<a href="{{ path('empty_cart') }}" class="btn btn-primary float-right">Empty Cart</a>
+				</td>
+			</tr>
 			</tbody>
 			<tfoot>
 				<tr>
