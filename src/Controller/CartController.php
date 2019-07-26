@@ -27,6 +27,7 @@ use App\Entity\Cart;
 use App\Entity\CartProduct;
 use App\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -105,6 +106,31 @@ class CartController extends AbstractController
     	$em->persist($cart_product);
     	$em->flush();
     	
+    	return $this->redirectToRoute('cart');
+    }
+
+	/**
+    * @Route("/update-cart-item", name="update_cart_item", methods={"POST"})
+    */    
+    public function updateItemQuantity(Request $request)
+    {
+    	$cart_product_id = $request->request->get('cart_product_id');
+    	$quantity = $request->request->get('quantity');
+
+    	$em = $this->getDoctrine()->getManager();
+    	$cart_product = $em->getRepository(CartProduct::class)
+    		->find($cart_product_id);
+
+    	if (! $cart_product) {
+    		throw $this->createNotFoundException(
+    			'Item not found'
+    		);
+    	}
+
+    	$cart_product->setQuantity($quantity);
+    	$em->flush();
+    	
+    	$this->addFlash('success', 'Item updated successfuly');
     	return $this->redirectToRoute('cart');
     }
 

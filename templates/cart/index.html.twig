@@ -21,6 +21,7 @@
 					<th style="width:50%">Product</th>
 					<th style="width:10%">Price</th>
 					<th style="width:8%">Quantity</th>
+					<th></th>
 					<th style="width:22%" class="text-center">Subtotal</th>
 					<th style="width:10%"></th>
 				</tr>
@@ -39,9 +40,15 @@
 						</div>
 					</td>
 					<td data-th="Price">${{ item.price }}</td>
+					<form method="post" action="{{ path('update_cart_item') }}">
 					<td data-th="Quantity">
-						<input type="number" class="form-control text-center" value="{{ item.quantity }}">
+						<input type="number" name="quantity" class="form-control text-center" value="{{ item.quantity }}">
+						<input type="hidden" name="cart_product_id" value="{{ item.cart_product_id }}">
 					</td>
+					<td>
+						<button type="submit" class="btn btn-info">Update</button>
+					</td>
+					</form>
 					<td data-th="Subtotal" class="text-center">${{ item.subtotal }}</td>
 					<td class="actions" data-th="">
 						<a href="{{ path('delete_cart_item', {id: item.cart_product_id}) }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>								
