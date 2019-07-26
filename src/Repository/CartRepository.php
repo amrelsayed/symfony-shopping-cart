@@ -47,4 +47,33 @@ class CartRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findOneByUserId($value): ?Cart
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.user_id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findCartProductsByUserId($user_id)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT c.id as cart_id, p.price * cp.quantity as subtotal, cp.quantity, cp.product_id, p.price, p.name, p.image, p.description
+            FROM cart c
+            left join cart_product cp
+            on c.id = cp.cart_id
+            join product p
+            on cp.product_id = p.id
+            WHERE c.user_id = :user_id
+            ';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['user_id' => $user_id]);
+
+        return $stmt->fetchAll();
+    }
 }

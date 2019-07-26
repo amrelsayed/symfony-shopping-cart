@@ -47,4 +47,16 @@ class CartProductRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findOneByProductIdAndCartId($product_id, $cart_id): ?CartProduct
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.product_id = :product_id')
+            ->andWhere('c.cart_id = :cart_id')
+            ->setParameter('product_id', $product_id)
+            ->setParameter('cart_id', $cart_id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }

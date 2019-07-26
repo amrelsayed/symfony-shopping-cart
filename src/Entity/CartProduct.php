@@ -27,12 +27,22 @@ class CartProduct
     private $price;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\product")
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $product_id;
+    
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $cart_id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Product")
      */
     private $product;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\cart")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Cart")
      */
     private $cart;
 
@@ -61,6 +71,30 @@ class CartProduct
     public function setPrice(?float $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getProductId(): ?int
+    {
+        return $this->product_id;
+    }
+
+    public function setProductId(?int $product_id): int
+    {
+        $this->product_id = $product_id;
+
+        return $this;
+    }
+
+    public function getCartId(): ?int
+    {
+        return $this->cart_id;
+    }
+
+    public function setCartId(?int $cart_id): int
+    {
+        $this->cart_id = $cart_id;
 
         return $this;
     }
