@@ -23,9 +23,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Cart;
 use App\Entity\CartProduct;
-use App\Entity\Product;
 use App\Services\CartService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,9 +44,7 @@ class CartController extends AbstractController
 	*/
     public function index()
     {
-        $cart_items = $this->getDoctrine()
-    		->getRepository(Cart::class)
-    		->findCartProductsByUserId(1);
+        $cart_items = $this->cartService->getCartItems();
 
         return $this->render('cart/index.html.twig', [
             'cart_items' => $cart_items,
@@ -70,21 +66,7 @@ class CartController extends AbstractController
     */    
     public function updateItemQuantity(Request $request)
     {
-    	$cart_product_id = $request->request->get('cart_product_id');
-    	$quantity = $request->request->get('quantity');
-
-    	$em = $this->getDoctrine()->getManager();
-    	$cart_product = $em->getRepository(CartProduct::class)
-    		->find($cart_product_id);
-
-    	if (! $cart_product) {
-    		throw $this->createNotFoundException(
-    			'Item not found'
-    		);
-    	}
-
-    	$cart_product->setQuantity($quantity);
-    	$em->flush();
+    	$this->cartService->updateItem($request);
     	
     	$this->addFlash('success', 'Item updated successfuly');
     	return $this->redirectToRoute('cart');
@@ -95,10 +77,7 @@ class CartController extends AbstractController
     */
     public function deleteItem(CartProduct $cartProduct)
     {
-    	$em = $this->getDoctrine()->getManager();
-
-    	$em->remove($cartProduct);
-    	$em->flush();
+    	$this->cartService->deleteItem($cartProduct);
 
     	$this->addFlash('success', 'Item deleted successfuly');
     	return $this->redirectToRoute('cart');
@@ -109,13 +88,7 @@ class CartController extends AbstractController
     */
     public function emptyCart()
     {
-    	$user_cart = $this->getDoctrine()
-    		->getRepository(Cart::class)
-    		->findOneBy(['user_id' => 1]);
-    	
-    	$em = $this->getDoctrine()->getManager();
-    	$q = $em->createQuery('delete from App\Entity\CartProduct cp where cp.cart_id = ' . $user_cart->getId());
-		$q->execute();
+    	$this->cartService->emptyCart();
 
     	return $this->redirectToRoute('cart');
     }

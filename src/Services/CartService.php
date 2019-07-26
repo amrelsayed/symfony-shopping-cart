@@ -9,7 +9,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CartService extends AbstractController
 {
-	/*
+	public function getCartItems()
+    {
+        return $this->getDoctrine()
+            ->getRepository(Cart::class)
+            ->findCartProductsByUserId(1);
+    }
+
+    /*
     * If we have authenticated users the logic will be
     * 1- checking if user cart is exists (we may find cart with a condition because our database design allows user 
     *    to have multiple carts in case we may want to keep old carts data, so the current cart may have a stuus of new 
@@ -62,4 +69,42 @@ class CartService extends AbstractController
     	$em->persist($cart_product);
     	$em->flush();
 	}
+
+    public function updateItem($request)
+    {
+        $cart_product_id = $request->request->get('cart_product_id');
+        $quantity = $request->request->get('quantity');
+
+        $em = $this->getDoctrine()->getManager();
+        $cart_product = $em->getRepository(CartProduct::class)
+            ->find($cart_product_id);
+
+        if (! $cart_product) {
+            throw $this->createNotFoundException(
+                'Item not found'
+            );
+        }
+
+        $cart_product->setQuantity($quantity);
+        $em->flush();
+    }
+
+    public function deleteItem($cartProduct)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $em->remove($cartProduct);
+        $em->flush();
+    }
+
+    public function emptyCart()
+    {
+        $user_cart = $this->getDoctrine()
+            ->getRepository(Cart::class)
+            ->findOneBy(['user_id' => 1]);
+        
+        $em = $this->getDoctrine()->getManager();
+        $q = $em->createQuery('delete from App\Entity\CartProduct cp where cp.cart_id = ' . $user_cart->getId());
+        $q->execute();
+    }
 }
