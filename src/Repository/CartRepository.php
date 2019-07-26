@@ -62,7 +62,7 @@ class CartRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = '
-            SELECT c.id as cart_id, p.price * cp.quantity as subtotal, cp.quantity, cp.product_id, p.price, p.name, p.image, p.description
+            SELECT c.id as cart_id, cp.id as cart_product_id, p.price * cp.quantity as subtotal, cp.quantity, cp.product_id, p.price, p.name, p.image, p.description
             FROM cart c
             left join cart_product cp
             on c.id = cp.cart_id

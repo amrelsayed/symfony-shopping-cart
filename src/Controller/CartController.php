@@ -36,7 +36,7 @@ class CartController extends AbstractController
         $cart_items = $this->getDoctrine()
     		->getRepository(Cart::class)
     		->findCartProductsByUserId(1);
-    	
+
         return $this->render('cart/index.html.twig', [
             'cart_items' => $cart_items,
         ]);
@@ -101,6 +101,20 @@ class CartController extends AbstractController
     	$em->persist($cart_product);
     	$em->flush();
     	
+    	return $this->redirectToRoute('cart');
+    }
+
+    /**
+    * @Route("/delete-cart-item/{id}", name="delete_cart_item")
+    */
+    public function deleteItem(CartProduct $cartProduct)
+    {
+    	$em = $this->getDoctrine()->getManager();
+
+    	$em->remove($cartProduct);
+    	$em->flush();
+
+    	$this->addFlash('success', 'Item deleted successfuly');
     	return $this->redirectToRoute('cart');
     }
 }
