@@ -64,7 +64,7 @@ class CartController extends AbstractController
     	// get user cart
     	$user_cart = $this->getDoctrine()
     		->getRepository(Cart::class)
-    		->findOneByUserId(1);
+    		->findOneBy(['user_id' => 1]);
 
     	// init doctrine manager
     	$em = $this->getDoctrine()->getManager();
@@ -83,7 +83,7 @@ class CartController extends AbstractController
     	// check if product exists in cart_product table
     	$cart_product = $this->getDoctrine()
     		->getRepository(CartProduct::class)
-    		->findOneByProductIdAndCartId($product_id, $user_cart->getId());
+    		->findOneBy(['product_id' => $product_id, 'cart_id' => $user_cart->getId()]);
 
     	if (! $cart_product) {
     		$cart_product = new CartProduct();

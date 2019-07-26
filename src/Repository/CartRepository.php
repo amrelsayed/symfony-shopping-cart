@@ -48,15 +48,6 @@ class CartRepository extends ServiceEntityRepository
     }
     */
 
-    public function findOneByUserId($value): ?Cart
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.user_id = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
     public function findCartProductsByUserId($user_id)
     {
         $conn = $this->getEntityManager()->getConnection();

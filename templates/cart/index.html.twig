@@ -9,6 +9,12 @@
   <!-- Page Content -->
   <div class="container">
 
+{% for message in app.flashes('success') %}
+	<div class="alert alert-success">
+		{{ message }}
+	</div>
+{% endfor %}
+
 		<table id="cart" class="table table-hover table-condensed">
 			<thead>
 				<tr>
