@@ -78,6 +78,7 @@ class CartController extends AbstractController
     	if (! $user_cart) {
     		$user_cart = new Cart();
     		$user_cart->setUserId(1);
+    		$em->persist($user_cart);
     	}
     	
     	// get product
@@ -98,11 +99,8 @@ class CartController extends AbstractController
 	    	$cart_product->setPrice($product->getPrice());
     	} else {
     		$cart_product->setQuantity($cart_product->getQuantity() + 1);
-    	} 	
+    	}
     	
-    	$user_cart->setTotalPrice($user_cart->getTotalPrice() + $product->getPrice());
-    	
-    	$em->persist($user_cart);
     	$em->persist($cart_product);
     	$em->flush();
     	
