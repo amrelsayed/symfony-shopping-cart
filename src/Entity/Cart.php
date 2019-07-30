@@ -24,7 +24,7 @@ class Cart
     private $user_id;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="float", nullable=true)
      */
     private $total_price;
 
