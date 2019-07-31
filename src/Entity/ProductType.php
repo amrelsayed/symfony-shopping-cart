@@ -11,6 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ProductType
 {
+    CONST TYPES = array(
+        'NORMAL' => 1,
+        'SALE' => 2,
+    );
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

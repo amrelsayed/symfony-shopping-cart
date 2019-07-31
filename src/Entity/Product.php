@@ -46,11 +46,6 @@ class Product
      */
     private $type;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $type_id;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -124,18 +119,6 @@ class Product
     public function setType(?ProductType $type): self
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    public function getTypeId(): ?string
-    {
-        return $this->type_id;
-    }
-
-    public function setTypeId(string $type_id): self
-    {
-        $this->type_id = $type_id;
 
         return $this;
     }

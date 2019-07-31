@@ -12,17 +12,6 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        for ($i = 0; $i < 20; $i++) {
-        	$product = new Product();
-        	$product->setName('product ' . $i);
-        	$product->setDescription('Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!');
-        	$product->setPrice(mt_rand(10, 100));
-        	$product->setImage('700x400.png');
-        	$product->setInStock(mt_rand(1, 20));
-            $product->setTypeId(mt_rand(1,2));
-        	$manager->persist($product);
-        }
-        
         $cartType1 = new CartType();
         $cartType1->setName('Order');
         $manager->persist($cartType1);
@@ -38,6 +27,28 @@ class AppFixtures extends Fixture
         $productType2 = new ProductType();
         $productType2->setName('Sale');
         $manager->persist($productType2);
+
+        for ($i = 0; $i < 10; $i++) {
+        	$product = new Product();
+        	$product->setName('product ' . $i);
+        	$product->setDescription('Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!');
+        	$product->setPrice(mt_rand(10, 100));
+        	$product->setImage('700x400.png');
+        	$product->setInStock(mt_rand(1, 20));
+            $product->setType($productType1);
+        	$manager->persist($product);
+        }
+
+        for ($i = 0; $i < 10; $i++) {
+            $product = new Product();
+            $product->setName('product ' . $i);
+            $product->setDescription('Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur!');
+            $product->setPrice(mt_rand(10, 100));
+            $product->setImage('700x400.png');
+            $product->setInStock(mt_rand(1, 20));
+            $product->setType($productType2);
+            $manager->persist($product);
+        }
 
         $manager->flush();
     }

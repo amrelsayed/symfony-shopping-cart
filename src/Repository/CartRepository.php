@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Cart;
+use App\Entity\CartType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -59,11 +60,11 @@ class CartRepository extends ServiceEntityRepository
             on c.id = cp.cart_id
             join product p
             on cp.product_id = p.id
-            WHERE c.user_id = :user_id
+            WHERE c.user_id = :user_id AND c.type_id = :type_id
             ';
 
         $stmt = $conn->prepare($sql);
-        $stmt->execute(['user_id' => $user_id]);
+        $stmt->execute(['user_id' => $user_id, 'type_id' => CartType::TYPES['ORDER']]);
 
         return $stmt->fetchAll();
     }

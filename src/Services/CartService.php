@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Entity\Cart;
 use App\Entity\CartProduct;
+use App\Entity\CartType;
 use App\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -34,7 +35,7 @@ class CartService extends AbstractController
 		// get user cart
     	$user_cart = $this->getDoctrine()
     		->getRepository(Cart::class)
-    		->findOneBy(['user_id' => 1]);
+    		->findOneBy(['user_id' => 1, 'type' => CartType::TYPES['ORDER']]);
 
     	// init doctrine manager
     	$em = $this->getDoctrine()->getManager();
@@ -43,6 +44,7 @@ class CartService extends AbstractController
     	if (! $user_cart) {
     		$user_cart = new Cart();
     		$user_cart->setUserId(1);
+            $user_cart->setType($this->getDoctrine()->getRepository(CartType::class)->find(CartType::TYPES['ORDER']));
     		$em->persist($user_cart);
     	}
     	

@@ -15,10 +15,6 @@
 *
 * Since this project is for testing and playing around symfony and we are doing just shopping cart,
 * I will consider that we have one user and one cart
-*
-* There are many queries here and controller logic that should not be there
-* it should be extracted to services or repositories, and there are get methods where I should
-* use post, I'll try to refactor and find best practice for symfony if I've time
 */
 
 namespace App\Controller;

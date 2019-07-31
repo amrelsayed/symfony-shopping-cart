@@ -11,6 +11,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class CartType
 {
+    CONST TYPES = array(
+        'ORDER' => 1,
+        'WISHLIST' => 2,
+    );
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
