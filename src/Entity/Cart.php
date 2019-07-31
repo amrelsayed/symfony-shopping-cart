@@ -33,6 +33,11 @@ class Cart
     */
     private $items;
 
+    /**
+    * @ORM\ManyToOne(targetEntity="App\Entity\CartType", inversedBy="carts")
+    */
+    private $type;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -73,5 +78,17 @@ class Cart
     public function getItems(): collection
     {
         return $this->items;
+    }
+
+    public function getType(): ?CartType
+    {
+        return $this->type;
+    }
+
+    public function setType(?CartType $type): self
+    {
+        $this->type = $type;
+
+        return $this;
     }
 }

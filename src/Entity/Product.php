@@ -41,6 +41,16 @@ class Product
      */
     private $image;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\ProductType", inversedBy="products")
+     */
+    private $type;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $type_id;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -102,6 +112,30 @@ class Product
     public function setImage(?string $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getType(): ?ProductType
+    {
+        return $this->type;
+    }
+
+    public function setType(?ProductType $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getTypeId(): ?string
+    {
+        return $this->type_id;
+    }
+
+    public function setTypeId(string $type_id): self
+    {
+        $this->type_id = $type_id;
 
         return $this;
     }
