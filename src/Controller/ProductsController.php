@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\NormalProduct;
 use App\Entity\Product;
 use App\Entity\ProductType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,8 +16,8 @@ class ProductsController extends AbstractController
     public function index()
     {
         $products = $this->getDoctrine()
-            ->getRepository(Product::class)
-            ->findBy(['type' => ProductType::TYPES['NORMAL']]);
+            ->getRepository(NormalProduct::class)
+            ->findAll();
         
         return $this->render('products/index.html.twig', [
         	'products' => $products

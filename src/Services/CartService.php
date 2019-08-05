@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Entity\Cart;
 use App\Entity\CartProduct;
 use App\Entity\CartType;
+use App\Entity\OrderCart;
 use App\Entity\Product;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -12,9 +13,22 @@ class CartService extends AbstractController
 {
 	public function getCartItems()
     {
-        return $this->getDoctrine()
-            ->getRepository(Cart::class)
-            ->findCartProductsByUserId(1);
+        $conn = $this->getDoctrine()->getManager()->getConnection();
+
+        $sql = '
+            SELECT c.id as cart_id, cp.id as cart_product_id, p.price * cp.quantity as subtotal, cp.quantity, cp.product_id, p.price, p.name, p.image, p.description
+            FROM cart c
+            left join cart_product cp
+            on c.id = cp.cart_id
+            join product p
+            on cp.product_id = p.id
+            WHERE c.user_id = :user_id AND c.type = :type
+            ';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['user_id' => 1, 'type' => 'order']);
+
+        return $stmt->fetchAll();
     }
 
     /*
@@ -34,17 +48,16 @@ class CartService extends AbstractController
 	{
 		// get user cart
     	$user_cart = $this->getDoctrine()
-    		->getRepository(Cart::class)
-    		->findOneBy(['user_id' => 1, 'type' => CartType::TYPES['ORDER']]);
+    		->getRepository(OrderCart::class)
+    		->findOneBy(['user_id' => 1]);
 
     	// init doctrine manager
     	$em = $this->getDoctrine()->getManager();
 
     	// check if cart not found then add new cart for the user
     	if (! $user_cart) {
-    		$user_cart = new Cart();
+    		$user_cart = new OrderCart();
     		$user_cart->setUserId(1);
-            $user_cart->setType($this->getDoctrine()->getRepository(CartType::class)->find(CartType::TYPES['ORDER']));
     		$em->persist($user_cart);
     	}
     	
@@ -102,7 +115,7 @@ class CartService extends AbstractController
     public function emptyCart()
     {
         $user_cart = $this->getDoctrine()
-            ->getRepository(Cart::class)
+            ->getRepository(OrderCart::class)
             ->findOneBy(['user_id' => 1]);
         
         $em = $this->getDoctrine()->getManager();

@@ -6,6 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"product" = "Product", "normal" = "NormalProduct", "sale" = "SaleProduct"})
  */
 class Product
 {
@@ -40,11 +43,6 @@ class Product
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $image;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\ProductType", inversedBy="products")
-     */
-    private $type;
 
     public function getId(): ?int
     {
@@ -107,18 +105,6 @@ class Product
     public function setImage(?string $image): self
     {
         $this->image = $image;
-
-        return $this;
-    }
-
-    public function getType(): ?ProductType
-    {
-        return $this->type;
-    }
-
-    public function setType(?ProductType $type): self
-    {
-        $this->type = $type;
 
         return $this;
     }

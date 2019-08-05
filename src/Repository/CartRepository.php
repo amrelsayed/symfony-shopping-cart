@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Cart;
-use App\Entity\CartType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -48,24 +47,4 @@ class CartRepository extends ServiceEntityRepository
         ;
     }
     */
-
-    public function findCartProductsByUserId($user_id)
-    {
-        $conn = $this->getEntityManager()->getConnection();
-
-        $sql = '
-            SELECT c.id as cart_id, cp.id as cart_product_id, p.price * cp.quantity as subtotal, cp.quantity, cp.product_id, p.price, p.name, p.image, p.description
-            FROM cart c
-            left join cart_product cp
-            on c.id = cp.cart_id
-            join product p
-            on cp.product_id = p.id
-            WHERE c.user_id = :user_id AND c.type_id = :type_id
-            ';
-
-        $stmt = $conn->prepare($sql);
-        $stmt->execute(['user_id' => $user_id, 'type_id' => CartType::TYPES['ORDER']]);
-
-        return $stmt->fetchAll();
-    }
 }

@@ -8,6 +8,9 @@ use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CartRepository")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"cart" = "Cart", "order" = "OrderCart", "wishlist" = "WishlistCart"})
  */
 class Cart
 {
@@ -32,11 +35,6 @@ class Cart
     * @ORM\OneToMany(targetEntity="App\Entity\CartProduct", mappedBy="cart")
     */
     private $items;
-
-    /**
-    * @ORM\ManyToOne(targetEntity="App\Entity\CartType", inversedBy="carts")
-    */
-    private $type;
 
     public function __construct()
     {
@@ -78,17 +76,5 @@ class Cart
     public function getItems(): collection
     {
         return $this->items;
-    }
-
-    public function getType(): ?CartType
-    {
-        return $this->type;
-    }
-
-    public function setType(?CartType $type): self
-    {
-        $this->type = $type;
-
-        return $this;
     }
 }
